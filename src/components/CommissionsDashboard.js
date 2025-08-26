@@ -12,7 +12,7 @@ export default function CommissionsDashboard({ referralId }) {
     if (referralId) {
       fetchCommissions()
     }
-  }, [referralId])
+  }, [referralId, fetchCommissions])
 
   const fetchCommissions = async () => {
     try {

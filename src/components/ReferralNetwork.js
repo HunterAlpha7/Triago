@@ -12,7 +12,7 @@ export default function ReferralNetwork({ referralId }) {
     if (referralId) {
       fetchReferralNetwork()
     }
-  }, [referralId])
+  }, [referralId, fetchReferralNetwork])
 
   const fetchReferralNetwork = async () => {
     try {

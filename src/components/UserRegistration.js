@@ -184,7 +184,7 @@ export default function UserRegistration() {
             )}
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            This will be their referral ID (e.g., "johnsmith" or "jsmith-102")
+            This will be their referral ID (e.g., &quot;johnsmith&quot; or &quot;jsmith-102&quot;)
           </p>
         </div>
 
