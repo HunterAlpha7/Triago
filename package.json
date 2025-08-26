@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "build": "prisma generate && next build --turbopack",
     "start": "next start",
     "lint": "eslint",
     "seed": "node scripts/seed-demo-data.js",
     "setup": "node scripts/setup.js",
-    "setup:dev": "node scripts/setup.js && npm run dev"
+    "setup:dev": "node scripts/setup.js && npm run dev",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.14.0",

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { DollarSign, Clock, CheckCircle, TrendingUp, Users } from 'lucide-react'
 
 export default function CommissionsDashboard({ referralId }) {
@@ -8,13 +8,7 @@ export default function CommissionsDashboard({ referralId }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    if (referralId) {
-      fetchCommissions()
-    }
-  }, [referralId, fetchCommissions])
-
-  const fetchCommissions = async () => {
+  const fetchCommissions = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/users/${referralId}/commissions`)
@@ -28,7 +22,13 @@ export default function CommissionsDashboard({ referralId }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [referralId])
+
+  useEffect(() => {
+    if (referralId) {
+      fetchCommissions()
+    }
+  }, [referralId, fetchCommissions])
 
   if (loading) {
     return (

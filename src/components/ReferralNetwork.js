@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Users, UserPlus, DollarSign, TrendingUp } from 'lucide-react'
 
 export default function ReferralNetwork({ referralId }) {
@@ -8,13 +8,7 @@ export default function ReferralNetwork({ referralId }) {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    if (referralId) {
-      fetchReferralNetwork()
-    }
-  }, [referralId, fetchReferralNetwork])
-
-  const fetchReferralNetwork = async () => {
+  const fetchReferralNetwork = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/users/${referralId}/referrals`)
@@ -28,7 +22,13 @@ export default function ReferralNetwork({ referralId }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [referralId])
+
+  useEffect(() => {
+    if (referralId) {
+      fetchReferralNetwork()
+    }
+  }, [referralId, fetchReferralNetwork])
 
   if (loading) {
     return (
