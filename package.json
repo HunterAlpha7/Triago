@@ -1,0 +1,32 @@
+{
+  "name": "dascher",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint",
+    "seed": "node scripts/seed-demo-data.js",
+    "setup": "node scripts/setup.js",
+    "setup:dev": "node scripts/setup.js && npm run dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.14.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.541.0",
+    "next": "15.5.0",
+    "prisma": "^6.14.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "tailwind-merge": "^3.3.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.0",
+    "tailwindcss": "^4"
+  }
+}

@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  username      String   @unique
+  referralId    String   @unique // Human-readable referral ID (e.g., "johnsmith", "jsmith-102")
+  firstName     String?
+  lastName      String?
+  avatar        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Referral relationships
+  referredById  String?  // Points to the referralId of the user who recruited them
+  referredBy    User?    @relation("UserReferrals", fields: [referredById], references: [referralId])
+  referrals     User[]   @relation("UserReferrals")
+  
+  // Referral records where this user is the referrer
+  referrerReferrals Referral[] @relation("ReferrerReferrals")
+  // Referral records where this user is the referred
+  referredReferrals Referral[] @relation("ReferredReferrals")
+  
+  // Commission tracking
+  commissions  Commission[]
+  purchases    Purchase[]
+  
+  // Referral limits
+  referralCount Int @default(0) // Current number of direct referrals (max 5)
+  
+  @@map("users")
+}
+
+model Referral {
+  id            String   @id @default(cuid())
+  referrerId    String   // referralId of the user who made the referral
+  referredId    String   // referralId of the user who was referred
+  level         Int      // 1, 2, or 3 (referral level)
+  createdAt     DateTime @default(now())
+  
+  referrer     User     @relation("ReferrerReferrals", fields: [referrerId], references: [referralId])
+  referred     User     @relation("ReferredReferrals", fields: [referredId], references: [referralId])
+  
+  @@unique([referrerId, referredId, level])
+  @@map("referrals")
+}
+
+model Commission {
+  id            String   @id @default(cuid())
+  userId        String   // referralId of the user earning the commission
+  referrerId    String   // referralId of the user who referred them
+  level         Int      // 1, 2, or 3 (referral level)
+  amount        Float
+  percentage    Float    // 0.10 for 10%, 0.05 for 5%, 0.02 for 2%
+  purchaseId    String
+  status        CommissionStatus @default(PENDING)
+  createdAt     DateTime @default(now())
+  paidAt       DateTime?
+  
+  user         User     @relation(fields: [userId], references: [referralId])
+  purchase     Purchase @relation(fields: [purchaseId], references: [id])
+  
+  @@map("commissions")
+}
+
+model Purchase {
+  id            String   @id @default(cuid())
+  userId        String   // referralId of the user making the purchase
+  courseId      String
+  courseName    String
+  amount        Float
+  status        PurchaseStatus @default(COMPLETED)
+  createdAt     DateTime @default(now())
+  
+  user         User     @relation(fields: [userId], references: [referralId])
+  commissions  Commission[]
+  
+  @@map("purchases")
+}
+
+enum CommissionStatus {
+  PENDING
+  PAID
+  CANCELLED
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
